@@ -3,6 +3,7 @@ package com.compassuol.ms_event_manager.service;
 import com.compassuol.ms_event_manager.dto.EventDTO;
 import com.compassuol.ms_event_manager.model.Event;
 import com.compassuol.ms_event_manager.repository.EventRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,12 +12,13 @@ import java.util.Optional;
 @Service
 public class EventService {
 
+    private final ModelMapper modelMapper;
     private final EventRepository eventRepository;
 
     @Autowired
-    public EventService(EventRepository eventRepository)
-    {
+    public EventService(EventRepository eventRepository, ModelMapper modelMapper) {
         this.eventRepository = eventRepository;
+        this.modelMapper = modelMapper;
     }
 
     public EventDTO createEvent(EventDTO eventDTO){
