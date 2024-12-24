@@ -40,8 +40,15 @@ public class EventService {
                 .build();
     }
 
-    public Optional<Event> getEventById(String id){
-        return eventRepository.findById(id);
+    public Optional<EventDTO> getEventById(String id) {
+        return eventRepository.findById(id).map(event -> EventDTO.builder()
+                .id(event.getId())
+                .eventName(event.getEventName())
+                .dateTime(event.getDateTime())
+                .cep(event.getCep())
+                .logradouro(event.getLogradouro())
+                .bairro(event.getBairro())
+                .build());
     }
 
 
