@@ -9,7 +9,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@AllArgsConstructor @Getter @Setter @NoArgsConstructor
+@Builder @Getter @Setter
+@AllArgsConstructor @NoArgsConstructor
 @Document(collection = "events")
 public class Event implements Serializable {
     private static final long serialVersionUID = 1L;

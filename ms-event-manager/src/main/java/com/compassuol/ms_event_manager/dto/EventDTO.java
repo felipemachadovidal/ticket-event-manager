@@ -5,8 +5,9 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+
+@Getter @Setter @Builder
+@AllArgsConstructor @NoArgsConstructor
 public class EventDTO {
 
     private Long id;
