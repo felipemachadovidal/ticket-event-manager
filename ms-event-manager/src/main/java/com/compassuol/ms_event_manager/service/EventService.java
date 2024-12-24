@@ -24,6 +24,7 @@ public class EventService {
         this.modelMapper = modelMapper;
     }
 
+
     public EventDTO createEvent(EventDTO eventDTO) {
         Event event = modelMapper.map(eventDTO, Event.class);
         Event savedEvent = eventRepository.save(event);
@@ -31,35 +32,39 @@ public class EventService {
     }
 
 
-    public Optional<EventDTO> getEventById(String id) {
+    public Optional<EventDTO> getEventById(Long id) {
         return eventRepository.findById(id)
                 .map(event -> modelMapper.map(event, EventDTO.class));
     }
 
+
     public List<EventDTO> getAllEvents() {
-        return eventRepository.findAll().stream()
+        return eventRepository.findByDeletedFalse(Sort.by(Sort.Order.asc("eventName"))).stream()
                 .map(event -> modelMapper.map(event, EventDTO.class))
                 .collect(Collectors.toList());
     }
+
 
     public List<EventDTO> getAllEventsSorted() {
-        return eventRepository.findAll(Sort.by(Sort.Order.asc("eventName"))).stream()
+        return eventRepository.findByDeletedFalse(Sort.by(Sort.Order.asc("eventName"))).stream()
                 .map(event -> modelMapper.map(event, EventDTO.class))
                 .collect(Collectors.toList());
     }
 
+
     public EventDTO updateEvent(Long id, EventDTO eventDTO) {
-        if (eventRepository.existsById(String.valueOf(id))) {
-            Event event = modelMapper.map(eventDTO, Event.class);
-            event.setId(id);
+        Optional<Event> eventOpt = eventRepository.findById(id);
+        if (eventOpt.isPresent()) {
+            Event event = eventOpt.get();
+            modelMapper.map(eventDTO, event);
             Event updatedEvent = eventRepository.save(event);
             return modelMapper.map(updatedEvent, EventDTO.class);
-        } else {
-            return null;
         }
+        return null;
     }
 
-    public boolean softDeleteEvent(String id) {
+
+    public boolean softDeleteEvent(Long id) {
         Optional<Event> eventOpt = eventRepository.findById(id);
         if (eventOpt.isPresent()) {
             Event event = eventOpt.get();
@@ -69,9 +74,4 @@ public class EventService {
         }
         return false;
     }
-
-
-
-
-
 }
