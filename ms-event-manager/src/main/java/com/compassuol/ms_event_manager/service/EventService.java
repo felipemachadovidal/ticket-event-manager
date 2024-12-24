@@ -48,8 +48,8 @@ public class EventService {
                 .collect(Collectors.toList());
     }
 
-    public EventDTO updateEvent(String id, EventDTO eventDTO) {
-        if (eventRepository.existsById(id)) {
+    public EventDTO updateEvent(Long id, EventDTO eventDTO) {
+        if (eventRepository.existsById(String.valueOf(id))) {
             Event event = modelMapper.map(eventDTO, Event.class);
             event.setId(id);
             Event updatedEvent = eventRepository.save(event);
@@ -57,10 +57,18 @@ public class EventService {
         } else {
             return null;
         }
-
-
     }
 
+    public boolean softDeleteEvent(String id) {
+        Optional<Event> eventOpt = eventRepository.findById(id);
+        if (eventOpt.isPresent()) {
+            Event event = eventOpt.get();
+            event.setDeleted(true);
+            eventRepository.save(event);
+            return true;
+        }
+        return false;
+    }
 
 
 
