@@ -5,9 +5,12 @@ import com.compassuol.ms_event_manager.model.Event;
 import com.compassuol.ms_event_manager.repository.EventRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EventService {
@@ -21,36 +24,41 @@ public class EventService {
         this.modelMapper = modelMapper;
     }
 
-    public EventDTO createEvent(EventDTO eventDTO){
-        Event event = Event.builder()
-                .eventName(eventDTO.getEventName())
-                .dateTime(eventDTO.getDateTime())
-                .cep(eventDTO.getCep())
-                .logradouro(eventDTO.getLogradouro())
-                .bairro(eventDTO.getBairro())
-                .build();
-
+    public EventDTO createEvent(EventDTO eventDTO) {
+        Event event = modelMapper.map(eventDTO, Event.class);
         Event savedEvent = eventRepository.save(event);
-
-        return EventDTO.builder()
-                .id(savedEvent.getId())
-                .eventName(savedEvent.getEventName())
-                .dateTime(savedEvent.getDateTime())
-                .cep(savedEvent.getCep())
-                .logradouro(savedEvent.getLogradouro())
-                .bairro(savedEvent.getBairro())
-                .build();
+        return modelMapper.map(savedEvent, EventDTO.class);
     }
 
+
     public Optional<EventDTO> getEventById(String id) {
-        return eventRepository.findById(id).map(event -> EventDTO.builder()
-                .id(event.getId())
-                .eventName(event.getEventName())
-                .dateTime(event.getDateTime())
-                .cep(event.getCep())
-                .logradouro(event.getLogradouro())
-                .bairro(event.getBairro())
-                .build());
+        return eventRepository.findById(id)
+                .map(event -> modelMapper.map(event, EventDTO.class));
+    }
+
+    public List<EventDTO> getAllEvents() {
+        return eventRepository.findAll().stream()
+                .map(event -> modelMapper.map(event, EventDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    public List<EventDTO> getAllEventsSorted() {
+        return eventRepository.findAll(Sort.by(Sort.Order.asc("eventName"))).stream()
+                .map(event -> modelMapper.map(event, EventDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    public EventDTO updateEvent(String id, EventDTO eventDTO) {
+        if (eventRepository.existsById(id)) {
+            Event event = modelMapper.map(eventDTO, Event.class);
+            event.setId(id);
+            Event updatedEvent = eventRepository.save(event);
+            return modelMapper.map(updatedEvent, EventDTO.class);
+        } else {
+            return null;
+        }
+
+
     }
 
 

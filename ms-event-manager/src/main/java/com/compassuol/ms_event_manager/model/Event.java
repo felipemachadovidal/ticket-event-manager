@@ -30,6 +30,19 @@ public class Event implements Serializable {
     private String logradouro;
     private String bairro;
 
+
+
+    private boolean deleted = false;
+
+    public Event(Long id, String eventName, LocalDateTime dateTime, String cep, String bairro, String logradouro) {
+        this.id = id;
+        this.eventName = eventName;
+        this.dateTime = dateTime;
+        this.cep = cep;
+        this.bairro = bairro;
+        this.logradouro = logradouro;
+    }
+
     @Override
     public String toString() {
         return "Event{" +
