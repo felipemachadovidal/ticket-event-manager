@@ -9,13 +9,14 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@AllArgsConstructor @Getter @Setter @NoArgsConstructor
+@Builder @Getter @Setter
+@AllArgsConstructor @NoArgsConstructor
 @Document(collection = "events")
 public class Event implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String id;
+    private Long id;
 
     @NotBlank
     private String eventName;
@@ -28,6 +29,19 @@ public class Event implements Serializable {
 
     private String logradouro;
     private String bairro;
+
+
+
+    private boolean deleted = false;
+
+    public Event(Long id, String eventName, LocalDateTime dateTime, String cep, String bairro, String logradouro) {
+        this.id = id;
+        this.eventName = eventName;
+        this.dateTime = dateTime;
+        this.cep = cep;
+        this.bairro = bairro;
+        this.logradouro = logradouro;
+    }
 
     @Override
     public String toString() {
