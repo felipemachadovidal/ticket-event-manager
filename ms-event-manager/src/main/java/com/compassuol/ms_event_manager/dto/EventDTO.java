@@ -6,12 +6,12 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 
-@Getter @Setter @Builder
+@Data @Builder
 @AllArgsConstructor @NoArgsConstructor
 public class EventDTO {
 
-    @NotBlank
-    private String eventId;
+    @NotNull
+    private Long eventId;
 
     @NotBlank
     private String eventName;
