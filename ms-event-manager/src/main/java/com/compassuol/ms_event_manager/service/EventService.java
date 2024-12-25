@@ -30,6 +30,7 @@ public class EventService {
 
     public EventDTO createEvent(EventDTO eventDTO) {
         var viaCepResponse = viaCepClient.getCepDetails(eventDTO.getCep());
+
         if (viaCepResponse != null) {
             eventDTO.setLogradouro(viaCepResponse.getLogradouro());
             eventDTO.setCidade(viaCepResponse.getCidade());
@@ -68,12 +69,19 @@ public class EventService {
         Optional<Event> eventOpt = eventRepository.findById(id);
         if (eventOpt.isPresent()) {
             Event event = eventOpt.get();
+
+            if (!event.getCep().equals(eventDTO.getCep())) {
+                var viaCepResponse = viaCepClient.getCepDetails(eventDTO.getCep());
+                eventDTO.setLogradouro(viaCepResponse.getLogradouro());
+                eventDTO.setCidade(viaCepResponse.getCidade());
+                eventDTO.setUf(viaCepResponse.getUf());
+            }
+
             modelMapper.map(eventDTO, event);
             Event updatedEvent = eventRepository.save(event);
             return modelMapper.map(updatedEvent, EventDTO.class);
         }
-        return null;
-    }
+        return null;}
 
 
     public boolean softDeleteEvent(Long id) {
