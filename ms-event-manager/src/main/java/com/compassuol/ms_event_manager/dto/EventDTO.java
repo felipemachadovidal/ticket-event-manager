@@ -20,6 +20,9 @@ public class EventDTO {
     private LocalDateTime eventDateTime;
 
     @NotBlank
+    private String cep;
+
+    @NotBlank
     private String logradouro;
 
     @NotBlank
@@ -30,6 +33,8 @@ public class EventDTO {
 
     @NotBlank
     private String uf;
+
+    private boolean deleted;
 
 
 }

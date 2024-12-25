@@ -1,5 +1,6 @@
 package com.compassuol.ms_event_manager.service;
 
+import com.compassuol.ms_event_manager.client.ViaCepClient;
 import com.compassuol.ms_event_manager.dto.EventDTO;
 import com.compassuol.ms_event_manager.model.Event;
 import com.compassuol.ms_event_manager.repository.EventRepository;
@@ -17,15 +18,27 @@ public class EventService {
 
     private final ModelMapper modelMapper;
     private final EventRepository eventRepository;
+    private final ViaCepClient viaCepClient;
 
     @Autowired
-    public EventService(EventRepository eventRepository, ModelMapper modelMapper) {
+    public EventService(EventRepository eventRepository, ModelMapper modelMapper, ViaCepClient viaCepClient) {
         this.eventRepository = eventRepository;
         this.modelMapper = modelMapper;
+        this.viaCepClient = viaCepClient;
     }
 
 
     public EventDTO createEvent(EventDTO eventDTO) {
+        var viaCepResponse = viaCepClient.getCepDetails(eventDTO.getCep());
+
+        if (viaCepResponse != null) {
+            eventDTO.setLogradouro(viaCepResponse.getLogradouro());
+            eventDTO.setCidade(viaCepResponse.getCidade());
+            eventDTO.setUf(viaCepResponse.getUf());
+        } else {
+            throw new IllegalArgumentException("CEP inválido ou não encontrado: " + eventDTO.getCep());
+        }
+
         Event event = modelMapper.map(eventDTO, Event.class);
         Event savedEvent = eventRepository.save(event);
         return modelMapper.map(savedEvent, EventDTO.class);
@@ -56,12 +69,19 @@ public class EventService {
         Optional<Event> eventOpt = eventRepository.findById(id);
         if (eventOpt.isPresent()) {
             Event event = eventOpt.get();
+
+            if (!event.getCep().equals(eventDTO.getCep())) {
+                var viaCepResponse = viaCepClient.getCepDetails(eventDTO.getCep());
+                eventDTO.setLogradouro(viaCepResponse.getLogradouro());
+                eventDTO.setCidade(viaCepResponse.getCidade());
+                eventDTO.setUf(viaCepResponse.getUf());
+            }
+
             modelMapper.map(eventDTO, event);
             Event updatedEvent = eventRepository.save(event);
             return modelMapper.map(updatedEvent, EventDTO.class);
         }
-        return null;
-    }
+        return null;}
 
 
     public boolean softDeleteEvent(Long id) {
