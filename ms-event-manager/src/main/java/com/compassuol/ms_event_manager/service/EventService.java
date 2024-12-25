@@ -30,9 +30,13 @@ public class EventService {
 
     public EventDTO createEvent(EventDTO eventDTO) {
         var viaCepResponse = viaCepClient.getCepDetails(eventDTO.getCep());
-        eventDTO.setLogradouro(viaCepResponse.getLogradouro());
-        eventDTO.setCidade(viaCepResponse.getCidade());
-        eventDTO.setUf(viaCepResponse.getUf());
+        if (viaCepResponse != null) {
+            eventDTO.setLogradouro(viaCepResponse.getLogradouro());
+            eventDTO.setCidade(viaCepResponse.getCidade());
+            eventDTO.setUf(viaCepResponse.getUf());
+        } else {
+            throw new IllegalArgumentException("CEP inválido ou não encontrado: " + eventDTO.getCep());
+        }
 
         Event event = modelMapper.map(eventDTO, Event.class);
         Event savedEvent = eventRepository.save(event);
