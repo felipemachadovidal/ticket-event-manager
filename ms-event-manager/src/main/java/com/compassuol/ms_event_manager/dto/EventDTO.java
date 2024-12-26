@@ -10,8 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor @NoArgsConstructor
 public class EventDTO {
 
-    @NotNull
-    private Long eventId;
+    private String eventId;
 
     @NotBlank
     private String eventName;
@@ -29,7 +28,7 @@ public class EventDTO {
     private String bairro;
 
     @NotBlank
-    private String cidade;
+    private String localidade;
 
     @NotBlank
     private String uf;

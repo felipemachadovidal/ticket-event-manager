@@ -11,5 +11,5 @@ import java.util.Optional;
 @Repository
 public interface EventRepository extends MongoRepository<Event, String> {
     List<Event> findByDeletedFalse(Sort sort);
-    Optional<Event> findById(Long id);
+    Optional<Event> findById(String eventId);
 }

@@ -17,7 +17,7 @@ public class Event implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private Long id;
+    private String eventId;
 
     @NotBlank
     private String eventName;
@@ -35,8 +35,8 @@ public class Event implements Serializable {
 
     private boolean deleted = false;
 
-    public Event(Long id, String eventName, LocalDateTime dateTime, String cep, String bairro, String logradouro) {
-        this.id = id;
+    public Event(String eventId, String eventName, LocalDateTime dateTime, String cep, String bairro, String logradouro) {
+        this.eventId = eventId;
         this.eventName = eventName;
         this.dateTime = dateTime;
         this.cep = cep;
@@ -53,18 +53,5 @@ public class Event implements Serializable {
                 ", bairro='" + bairro + '\'' +
                 ", logradouro='" + logradouro + '\'' +
                 '}';
-    }
+    }}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Event event = (Event) o;
-        return Objects.equals(id, event.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-}
