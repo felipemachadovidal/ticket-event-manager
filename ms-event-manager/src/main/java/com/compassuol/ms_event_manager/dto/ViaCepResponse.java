@@ -1,5 +1,6 @@
 package com.compassuol.ms_event_manager.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
@@ -10,5 +11,6 @@ public class ViaCepResponse {
     private String complemento;
     private String bairro;
     private String uf;
-    private String cidade;
+    private String localidade;
+
 }
