@@ -1,6 +1,7 @@
 package com.compassuol.ms_event_manager.service;
 
 import com.compassuol.ms_event_manager.client.ViaCepClient;
+import com.compassuol.ms_event_manager.dto.EventCreateRequestDTO;
 import com.compassuol.ms_event_manager.dto.EventDTO;
 import com.compassuol.ms_event_manager.model.Event;
 import com.compassuol.ms_event_manager.repository.EventRepository;
@@ -28,21 +29,28 @@ public class EventService {
     }
 
 
-    public EventDTO createEvent(EventDTO eventDTO) {
-        var viaCepResponse = viaCepClient.getCepDetails(eventDTO.getCep());
+    public EventDTO createEvent(EventCreateRequestDTO eventRequest) {
+        var viaCepResponse = viaCepClient.getCepDetails(eventRequest.getCep());
 
-        if (viaCepResponse != null) {
-            eventDTO.setLogradouro(viaCepResponse.getLogradouro());
-            eventDTO.setCidade(viaCepResponse.getCidade());
-            eventDTO.setUf(viaCepResponse.getUf());
-        } else {
-            throw new IllegalArgumentException("CEP inválido ou não encontrado: " + eventDTO.getCep());
+        if (viaCepResponse == null) {
+            throw new IllegalArgumentException("CEP inválido ou não encontrado: " + eventRequest.getCep());
         }
+
+        EventDTO eventDTO = new EventDTO();
+        eventDTO.setEventName(eventRequest.getEventName());
+        eventDTO.setEventDateTime(eventRequest.getDateTime());
+        eventDTO.setCep(eventRequest.getCep());
+        eventDTO.setLogradouro(viaCepResponse.getLogradouro());
+        eventDTO.setCidade(viaCepResponse.getCidade());
+        eventDTO.setUf(viaCepResponse.getUf());
+        eventDTO.setDeleted(false);
 
         Event event = modelMapper.map(eventDTO, Event.class);
         Event savedEvent = eventRepository.save(event);
+
         return modelMapper.map(savedEvent, EventDTO.class);
     }
+
 
 
     public Optional<EventDTO> getEventById(Long id) {

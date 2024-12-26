@@ -10,15 +10,31 @@ import java.time.LocalDateTime;
 @AllArgsConstructor @NoArgsConstructor
 public class EventDTO {
 
+    @NotNull
+    private Long eventId;
+
     @NotBlank
     private String eventName;
 
     @NotNull
-    private LocalDateTime dateTime;
+    private LocalDateTime eventDateTime;
 
     @NotBlank
     private String cep;
 
+    @NotBlank
+    private String logradouro;
+
+    @NotBlank
+    private String bairro;
+
+    @NotBlank
+    private String cidade;
+
+    @NotBlank
+    private String uf;
+
+    private boolean deleted;
 
 
 }
