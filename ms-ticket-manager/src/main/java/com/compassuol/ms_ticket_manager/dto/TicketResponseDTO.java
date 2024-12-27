@@ -1,4 +1,4 @@
-package com.compassuol.ms_ticket_manager.model;
+package com.compassuol.ms_ticket_manager.dto;
 
 import lombok.*;
 
