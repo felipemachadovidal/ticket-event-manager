@@ -6,6 +6,7 @@ import com.compassuol.ms_event_manager.dto.EventDTO;
 import com.compassuol.ms_event_manager.dto.ViaCepResponse;
 import com.compassuol.ms_event_manager.model.Event;
 import com.compassuol.ms_event_manager.repository.EventRepository;
+import org.bson.types.ObjectId;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -32,28 +33,38 @@ public class EventService {
 
     public EventDTO createEvent(EventCreateRequestDTO eventRequest) {
         ViaCepResponse viaCep = viaCepClient.getCepDetails(eventRequest.getCep());
+
         if (viaCep == null) {
             throw new IllegalArgumentException("CEP inválido ou dados não retornados pela API.");
         }
 
-        EventDTO eventDTO = new EventDTO();
-        eventDTO.setEventName(eventRequest.getEventName());
-        eventDTO.setEventDateTime(eventRequest.getDateTime());
-        eventDTO.setCep(eventRequest.getCep());
-        eventDTO.setBairro(viaCep.getBairro());
-        eventDTO.setLogradouro(viaCep.getLocalidade());
-        eventDTO.setUf(viaCep.getUf());
-        eventDTO.setLocalidade(viaCep.getLocalidade());
+        Event event = new Event();
+        event.setEventName(eventRequest.getEventName());
+        event.setDateTime(eventRequest.getDateTime());
+        event.setCep(eventRequest.getCep());
+        event.setBairro(viaCep.getBairro());
+        event.setLogradouro(viaCep.getLocalidade());
+        event.setUf(viaCep.getUf());
+        event.setLogradouro(viaCep.getLocalidade());
+
+        Event savedEvent = eventRepository.save(event);
+
+        ModelMapper modelMapper = new ModelMapper();
+        EventDTO eventDTO = modelMapper.map(savedEvent, EventDTO.class);
 
         return eventDTO;
     }
 
 
-
-
-    public Optional<EventDTO> getEventById(String eventId) {
-        return eventRepository.findById(eventId)
-                .map(event -> modelMapper.map(event, EventDTO.class));
+    public Optional<EventDTO> findByEventId(String id) {
+        try {
+            ObjectId objectId = new ObjectId(id);
+            return eventRepository.findByObjectId(objectId)
+                    .map(event -> modelMapper.map(event, EventDTO.class));
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid ID format: " + id);
+            return Optional.empty();
+        }
     }
 
 

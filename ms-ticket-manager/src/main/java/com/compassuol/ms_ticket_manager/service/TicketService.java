@@ -12,12 +12,12 @@ public class TicketService {
 
     private final TicketRepository ticketRepository;
     private final EventManagerClient eventManagerClient;
-    private final ModelMapper modelMapper;
 
     @Autowired
-    public TicketService(TicketRepository ticketRepository, EventManagerClient eventManagerClient, ModelMapper modelMapper) {
+    public TicketService(TicketRepository ticketRepository, EventManagerClient eventManagerClient) {
         this.ticketRepository = ticketRepository;
         this.eventManagerClient = eventManagerClient;
-        this.modelMapper = modelMapper;
     }
+
+
 }
