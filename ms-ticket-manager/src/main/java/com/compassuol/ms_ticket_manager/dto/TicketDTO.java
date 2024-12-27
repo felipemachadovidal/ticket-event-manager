@@ -1,17 +1,20 @@
 package com.compassuol.ms_ticket_manager.dto;
 
+
 import lombok.*;
 
-@Getter @Setter
 @Data
-public class TicketResponseDTO {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class TicketDTO {
 
     private String ticketId;
     private String customerName;
     private String cpf;
     private String customerMail;
-    private EventDetailsDTO event;
-    private String status;
-    private String brlTotalAmount;
-    private String usdTotalAmount;
+    private String eventId;
+    private String eventName;
+    private String brlAmount;
+    private String usdAmount;
 }
