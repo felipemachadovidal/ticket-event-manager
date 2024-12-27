@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 
 @NoArgsConstructor @AllArgsConstructor
-@Builder @Getter @Setter
+@Builder @Data
 @Document(collection = "tickets")
 public class Ticket implements Serializable{
     private static final long serialVersionUID = 1L;
@@ -35,11 +35,11 @@ public class Ticket implements Serializable{
     @NotBlank
     private String eventId;
 
-    @NotNull
-    private Integer tickets;
-
     @NotBlank
     private String status;
+
+    private Double brlAmount;
+    private Double usdAmount;
 
 
 
