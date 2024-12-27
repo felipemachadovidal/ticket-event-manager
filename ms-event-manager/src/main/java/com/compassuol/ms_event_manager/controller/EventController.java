@@ -40,4 +40,10 @@ public class EventController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("/get-all-events/sorted")
+    public ResponseEntity<List<EventDTO>> getAllEventsSorted() {
+        List<EventDTO> sortedEvents = eventService.getAllEventsSorted();
+        return ResponseEntity.ok(sortedEvents);
+    }
+
 }
