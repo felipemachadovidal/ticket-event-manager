@@ -2,17 +2,15 @@ package com.compassuol.ms_ticket_manager.model;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 
 @NoArgsConstructor @AllArgsConstructor
-@Builder @Getter @Setter
+@Builder @Data
 @Document(collection = "tickets")
 public class Ticket implements Serializable{
     private static final long serialVersionUID = 1L;
@@ -36,11 +34,12 @@ public class Ticket implements Serializable{
     @NotBlank
     private String eventId;
 
-    @NotNull
-    private Integer tickets;
-
     @NotBlank
     private String status;
+
+    private Double brlAmount;
+
+    private Double usdAmount;
 
 
 
