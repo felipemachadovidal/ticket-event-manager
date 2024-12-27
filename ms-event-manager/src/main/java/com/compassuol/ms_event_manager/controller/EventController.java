@@ -55,4 +55,13 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @DeleteMapping("/delete-event/{id}")
+    public ResponseEntity<Void> deleteEvent(@PathVariable String id) {
+        boolean deleted = eventService.softDeleteEvent(id);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
 }
