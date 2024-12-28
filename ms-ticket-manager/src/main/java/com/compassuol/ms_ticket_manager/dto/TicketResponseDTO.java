@@ -4,6 +4,7 @@ import lombok.*;
 
 @Getter @Setter
 @Data
+@Builder
 public class TicketResponseDTO {
 
     private String ticketId;
@@ -12,6 +13,6 @@ public class TicketResponseDTO {
     private String customerMail;
     private EventDetailsDTO event;
     private String status;
-    private String brlTotalAmount;
-    private String usdTotalAmount;
+    private Double brlTotalAmount;
+    private Double usdTotalAmount;
 }

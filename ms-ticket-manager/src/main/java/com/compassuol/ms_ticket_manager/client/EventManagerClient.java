@@ -5,9 +5,9 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "eventManagerClient", url = "http://event-manager-service")
+@FeignClient(name = "eventManagerClient", url = "http://localhost:8082//eventmanagement/v1")
 public interface EventManagerClient {
 
-    @GetMapping("/eventmanagement/v1/get-event/{id}")
-    EventDetailsDTO getEventDetails(@PathVariable("id") String eventId);
+    @GetMapping("/get-event/{id}")
+    EventDetailsDTO getEventDetails(@PathVariable("id") String id);
 }

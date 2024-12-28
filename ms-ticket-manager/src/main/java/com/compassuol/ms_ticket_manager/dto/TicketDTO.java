@@ -7,6 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter @Setter
 public class TicketDTO {
 
     private String ticketId;
@@ -15,6 +16,6 @@ public class TicketDTO {
     private String customerMail;
     private String eventId;
     private String eventName;
-    private String brlAmount;
-    private String usdAmount;
+    private Double brlAmount;
+    private Double usdAmount;
 }

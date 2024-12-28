@@ -37,6 +37,8 @@ public class Event implements Serializable {
 
     private String uf;
 
+    private String cidade;
+
 
 
     private boolean deleted = false;
