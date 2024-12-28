@@ -42,7 +42,7 @@ public class TicketService {
                 .customerName(ticketDTO.getCustomerName())
                 .cpf(ticketDTO.getCpf())
                 .customerMail(ticketDTO.getCustomerMail())
-                .eventId(event.getId()) // Consistente com o ID do evento
+                .eventId(event.getId())
                 .eventName(event.getEventName())
                 .brlAmount(Double.valueOf(ticketDTO.getBrlAmount()))
                 .usdAmount(Double.valueOf(ticketDTO.getUsdAmount()))
