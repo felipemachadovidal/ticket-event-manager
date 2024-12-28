@@ -11,10 +11,6 @@ public class ModelMapperConfig {
     @Bean
     public org.modelmapper.ModelMapper modelMapper() {
         org.modelmapper.ModelMapper modelMapper = new org.modelmapper.ModelMapper();
-        modelMapper.typeMap(EventCreateRequestDTO.class, Event.class).addMappings(mapper -> {
-            mapper.skip(Event::setEventId);
-        });
-
         return modelMapper;
     }
 }
