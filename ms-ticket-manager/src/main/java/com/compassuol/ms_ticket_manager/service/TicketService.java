@@ -29,8 +29,7 @@ public class TicketService {
     }
 
     public TicketResponseDTO createTicket(TicketDTO ticketDTO) {
-        EventDetailsDTO event;
-
+//        EventDetailsDTO event;
 
         try {
             event = eventManagerClient.getEventDetails(ticketDTO.getEventId());
@@ -60,6 +59,25 @@ public class TicketService {
                 .brlTotalAmount(savedTicket.getBrlAmount())
                 .usdTotalAmount(savedTicket.getUsdAmount())
                 .status(savedTicket.getStatus())
+                .build();
+    }
+
+    public TicketResponseDTO getTicketById(String ticketId) {
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new IllegalArgumentException("Ticket not found with ID: " + ticketId));
+
+        return TicketResponseDTO.builder()
+                .ticketId(ticket.getTicketid())
+                .customerName(ticket.getCustomerName())
+                .cpf(ticket.getCpf())
+                .customerMail(ticket.getCustomerMail())
+                .event(TicketResponseDTO.event.builder()
+                        .eventId(ticket.getEventId())
+                        .eventName(ticket.getEventName())
+                        .build())
+                .brlTotalAmount(ticket.getBrlAmount().toString())
+                .usdTotalAmount(ticket.getUsdAmount().toString())
+                .status(ticket.getStatus())
                 .build();
     }
 }

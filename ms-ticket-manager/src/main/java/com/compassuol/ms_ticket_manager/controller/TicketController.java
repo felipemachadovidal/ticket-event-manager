@@ -19,7 +19,7 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
-    @PostMapping
+    @PostMapping("/create-ticket")
     public ResponseEntity<TicketResponseDTO> createTicket(@Valid @RequestBody TicketDTO ticketDTO) {
         try {
             TicketResponseDTO ticketResponse = ticketService.createTicket(ticketDTO);
