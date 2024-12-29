@@ -29,4 +29,14 @@ public class TicketController {
         }
     }
 
+    @GetMapping("/get-ticket/{id}")
+    public ResponseEntity<TicketResponseDTO> getTicketById(@PathVariable("id") String ticketId) {
+        try {
+            TicketResponseDTO ticketResponse = ticketService.getTicketById(ticketId);
+            return ResponseEntity.ok(ticketResponse);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 }
