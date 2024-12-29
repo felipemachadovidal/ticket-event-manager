@@ -6,6 +6,7 @@ import com.compassuol.ms_ticket_manager.client.EventManagerClient;
 import com.compassuol.ms_ticket_manager.dto.EventDetailsDTO;
 import com.compassuol.ms_ticket_manager.dto.TicketDTO;
 import com.compassuol.ms_ticket_manager.dto.TicketResponseDTO;
+import com.compassuol.ms_ticket_manager.exceptions.TicketNotFoundException;
 import com.compassuol.ms_ticket_manager.model.Ticket;
 import com.compassuol.ms_ticket_manager.repository.TicketRepository;
 import feign.FeignException;
@@ -29,7 +30,7 @@ public class TicketService {
     }
 
     public TicketResponseDTO createTicket(TicketDTO ticketDTO) {
-//        EventDetailsDTO event;
+          EventDetailsDTO event;
 
         try {
             event = eventManagerClient.getEventDetails(ticketDTO.getEventId());
@@ -64,20 +65,15 @@ public class TicketService {
 
     public TicketResponseDTO getTicketById(String ticketId) {
         Ticket ticket = ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new IllegalArgumentException("Ticket not found with ID: " + ticketId));
+                .orElseThrow(() -> new TicketNotFoundException("Ticket not found with ID: " + ticketId));
 
-        return TicketResponseDTO.builder()
-                .ticketId(ticket.getTicketid())
-                .customerName(ticket.getCustomerName())
-                .cpf(ticket.getCpf())
-                .customerMail(ticket.getCustomerMail())
-                .event(TicketResponseDTO.event.builder()
-                        .eventId(ticket.getEventId())
-                        .eventName(ticket.getEventName())
-                        .build())
-                .brlTotalAmount(ticket.getBrlAmount().toString())
-                .usdTotalAmount(ticket.getUsdAmount().toString())
-                .status(ticket.getStatus())
-                .build();
+        // Conversão utilizando ModelMapper
+        TicketResponseDTO response = modelMapper.map(ticket, TicketResponseDTO.class);
+
+        // Ajustando valores monetários formatados
+        response.setBrlTotalAmount((ticket.getBrlAmount()));
+        response.setUsdTotalAmount((ticket.getUsdAmount()));
+
+        return response;
     }
 }
