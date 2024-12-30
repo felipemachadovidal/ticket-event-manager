@@ -9,6 +9,10 @@ import com.compassuol.ms_ticket_manager.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 public class TicketService {
 
@@ -44,20 +48,23 @@ public class TicketService {
     }
 
     public TicketResponseDTO getTicketById(String ticketId) {
-        Ticket ticket = ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new RuntimeException("Ticket not found with ID: " + ticketId));
+        Optional<Ticket> ticket = ticketRepository.findById(ticketId);
 
-        TicketResponseDTO response = new TicketResponseDTO();
-        response.setTicketid(ticket.getTicketid());
-        response.setCustomerName(ticket.getCustomerName());
-        response.setCpf(ticket.getCpf());
-        response.setCustomerMail(ticket.getCustomerMail());
-        response.setEventName(ticket.getEventName());
-        response.setStatus(ticket.getStatus());
-        response.setBrlAmount(ticket.getBrlAmount());
-        response.setUsdAmount(ticket.getUsdAmount());
-
-        return response;
+        if (ticket.isPresent()) {
+            Ticket foundTicket = ticket.get();
+            TicketResponseDTO response = new TicketResponseDTO();
+            response.setTicketid(foundTicket.getTicketid());
+            response.setCustomerName(foundTicket.getCustomerName());
+            response.setCpf(foundTicket.getCpf());
+            response.setCustomerMail(foundTicket.getCustomerMail());
+            response.setEventName(foundTicket.getEventName());
+            response.setStatus(foundTicket.getStatus());
+            response.setBrlAmount(foundTicket.getBrlAmount());
+            response.setUsdAmount(foundTicket.getUsdAmount());
+            return response;
+        } else {
+            throw new RuntimeException("Ticket not found with ID: " + ticketId);
+        }
     }
 
     public TicketResponseDTO updateTicket(String ticketId, TicketDTO ticketDTO) {
@@ -91,7 +98,46 @@ public class TicketService {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new RuntimeException("Ticket not found with ID: " + ticketId));
 
-        ticket.setStatus("CANCELLED"); // Marca como cancelado (soft-delete)
+        ticket.setStatus("CANCELLED");
         ticketRepository.save(ticket);
+    }
+
+    public List<TicketResponseDTO> getTicketsByCpf(String cpf) {
+        Optional<Ticket> tickets = ticketRepository.findByCpf(cpf);
+
+        return tickets.stream()
+                .map(ticket -> {
+                    TicketResponseDTO response = new TicketResponseDTO();
+                    response.setTicketid(ticket.getTicketid());
+                    response.setCustomerName(ticket.getCustomerName());
+                    response.setCpf(ticket.getCpf());
+                    response.setCustomerMail(ticket.getCustomerMail());
+                    response.setEventName(ticket.getEventName());
+                    response.setStatus(ticket.getStatus());
+                    response.setBrlAmount(ticket.getBrlAmount());
+                    response.setUsdAmount(ticket.getUsdAmount());
+                    return response;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<TicketResponseDTO> listTicketsByCpf(String cpf) {
+
+        Optional<Ticket> tickets = ticketRepository.findByCpf(cpf);
+
+        return tickets.stream()
+                .map(ticket -> {
+                    TicketResponseDTO response = new TicketResponseDTO();
+                    response.setTicketid(ticket.getTicketid());
+                    response.setCustomerName(ticket.getCustomerName());
+                    response.setCpf(ticket.getCpf());
+                    response.setCustomerMail(ticket.getCustomerMail());
+                    response.setEventName(ticket.getEventName());
+                    response.setStatus(ticket.getStatus());
+                    response.setBrlAmount(ticket.getBrlAmount());
+                    response.setUsdAmount(ticket.getUsdAmount());
+                    return response;
+                })
+                .collect(Collectors.toList());
     }
 }

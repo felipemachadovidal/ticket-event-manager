@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/ticketmanagement/v1")
@@ -25,10 +27,14 @@ public class TicketController {
         return ticketService.createTicket(eventId, ticketDTO);
     }
 
-    @GetMapping("/get-ticket/{id}")
-    public ResponseEntity<TicketResponseDTO> getTicketById(@PathVariable("id") String ticketId) {
-        TicketResponseDTO ticket = ticketService.getTicketById(ticketId);
-        return ResponseEntity.ok(ticket);
+    @GetMapping("/get-ticket/{ticketId}")
+    public TicketResponseDTO getTicketById(@PathVariable String ticketId) {
+        return ticketService.getTicketById(ticketId);
+    }
+
+    @GetMapping("/list-tickets-by-cpf/{cpf}")
+    public List<TicketResponseDTO> listTicketsByCpf(@PathVariable String cpf) {
+        return ticketService.listTicketsByCpf(cpf);
     }
 
     @PutMapping("/update-ticket/{id}")
@@ -43,5 +49,7 @@ public class TicketController {
         ticketService.cancelTicket(ticketId);
         return ResponseEntity.noContent().build(); // Retorna 204 No Content após a exclusão
     }
+
+
 
 }
