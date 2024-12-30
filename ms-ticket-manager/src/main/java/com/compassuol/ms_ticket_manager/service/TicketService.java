@@ -86,4 +86,12 @@ public class TicketService {
 
         return response;
     }
+
+    public void cancelTicket(String ticketId) {
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new RuntimeException("Ticket not found with ID: " + ticketId));
+
+        ticket.setStatus("CANCELLED"); // Marca como cancelado (soft-delete)
+        ticketRepository.save(ticket);
+    }
 }

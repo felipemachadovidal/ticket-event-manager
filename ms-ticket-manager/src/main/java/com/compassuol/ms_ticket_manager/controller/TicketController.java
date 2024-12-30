@@ -37,4 +37,11 @@ public class TicketController {
         TicketResponseDTO updatedTicket = ticketService.updateTicket(ticketId, ticketDTO);
         return ResponseEntity.ok(updatedTicket);
     }
+
+    @DeleteMapping("/cancel-ticket/{id}")
+    public ResponseEntity<Void> cancelTicket(@PathVariable("id") String ticketId) {
+        ticketService.cancelTicket(ticketId);
+        return ResponseEntity.noContent().build(); // Retorna 204 No Content após a exclusão
+    }
+
 }
