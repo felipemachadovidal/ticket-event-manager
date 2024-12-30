@@ -59,4 +59,31 @@ public class TicketService {
 
         return response;
     }
+
+    public TicketResponseDTO updateTicket(String ticketId, TicketDTO ticketDTO) {
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new RuntimeException("Ticket not found with ID: " + ticketId));
+
+        ticket.setCustomerName(ticketDTO.getCustomerName());
+        ticket.setCpf(ticketDTO.getCpf());
+        ticket.setCustomerMail(ticketDTO.getCustomerMail());
+        ticket.setEventName(ticketDTO.getEventName());
+        ticket.setStatus(ticketDTO.getStatus());
+        ticket.setBrlAmount(ticketDTO.getBrlAmount());
+        ticket.setUsdAmount(ticketDTO.getUsdAmount());
+
+        Ticket updatedTicket = ticketRepository.save(ticket);
+
+        TicketResponseDTO response = new TicketResponseDTO();
+        response.setTicketid(updatedTicket.getTicketid());
+        response.setCustomerName(updatedTicket.getCustomerName());
+        response.setCpf(updatedTicket.getCpf());
+        response.setCustomerMail(updatedTicket.getCustomerMail());
+        response.setEventName(updatedTicket.getEventName());
+        response.setStatus(updatedTicket.getStatus());
+        response.setBrlAmount(updatedTicket.getBrlAmount());
+        response.setUsdAmount(updatedTicket.getUsdAmount());
+
+        return response;
+    }
 }
