@@ -23,8 +23,8 @@ public class TicketController {
     }
 
     @PostMapping("/create/{eventId}")
-    public TicketResponseDTO createTicket(@PathVariable String eventId, @RequestBody TicketDTO ticketDTO) {
-        return ticketService.createTicket(eventId, ticketDTO);
+    public TicketResponseDTO createTicket(@PathVariable String id, @RequestBody TicketDTO ticketDTO) {
+        return ticketService.createTicket(id, ticketDTO);
     }
 
     @GetMapping("/get-ticket/{ticketId}")

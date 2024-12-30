@@ -1,4 +1,4 @@
-package com.compassuol.ms_ticket_manager;
+package com.compassuol.ms_ticket_manager.client;
 
 import com.compassuol.ms_ticket_manager.dto.EventResponseDTO;
 import org.springframework.cloud.openfeign.FeignClient;

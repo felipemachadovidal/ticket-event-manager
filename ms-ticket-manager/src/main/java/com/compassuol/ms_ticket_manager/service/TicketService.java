@@ -1,6 +1,6 @@
 package com.compassuol.ms_ticket_manager.service;
 
-import com.compassuol.ms_ticket_manager.EventManagerClient;
+import com.compassuol.ms_ticket_manager.client.EventManagerClient;
 import com.compassuol.ms_ticket_manager.dto.EventResponseDTO;
 import com.compassuol.ms_ticket_manager.dto.TicketDTO;
 import com.compassuol.ms_ticket_manager.dto.TicketResponseDTO;
