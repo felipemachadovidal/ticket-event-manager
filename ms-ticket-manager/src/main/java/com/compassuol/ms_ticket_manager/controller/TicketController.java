@@ -3,14 +3,14 @@ package com.compassuol.ms_ticket_manager.controller;
 
 import com.compassuol.ms_ticket_manager.dto.*;
 import com.compassuol.ms_ticket_manager.service.TicketService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/ticketmanagement/v1")
 public class TicketController {
+
 
     private final TicketService ticketService;
 
@@ -19,24 +19,8 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
-    @PostMapping("/create-ticket")
-    public ResponseEntity<TicketResponseDTO> createTicket(@Valid @RequestBody TicketDTO ticketDTO) {
-        try {
-            TicketResponseDTO ticketResponse = ticketService.createTicket(ticketDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ticketResponse);
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
+    @PostMapping("/create/{eventId}")
+    public TicketResponseDTO createTicket(@PathVariable String eventId, @RequestBody TicketDTO ticketDTO) {
+        return ticketService.createTicket(eventId, ticketDTO);
     }
-
-    @GetMapping("/get-ticket/{id}")
-    public ResponseEntity<TicketResponseDTO> getTicketById(@PathVariable("id") String ticketId) {
-        try {
-            TicketResponseDTO ticketResponse = ticketService.getTicketById(ticketId);
-            return ResponseEntity.ok(ticketResponse);
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
-
 }
