@@ -15,8 +15,16 @@ public class TicketResponseDTO {
     private String status;
     private Double brlAmount;
     private Double usdAmount;
+    private EventResponseDTO event;
 
     public TicketResponseDTO(String ticketid, String customerName, String cpf, String customerMail, String eventName, String status, Double brlAmount, Double usdAmount) {
+    }
+
+    public TicketResponseDTO() {
+
+    }
+
+    public TicketResponseDTO(String string, String customerName, String cpf, String customerMail, String eventName, String status, Double brlAmount, Double usdAmount, EventDetails eventDetails) {
     }
 
     public Double getBrlAmount() {
@@ -91,7 +99,11 @@ public class TicketResponseDTO {
         this.usdAmount = usdAmount;
     }
 
-    public TicketResponseDTO() {
+    public EventResponseDTO getEvent() {
+        return event;
+    }
 
+    public void setEvent(EventResponseDTO event) {
+        this.event = event;
     }
 }

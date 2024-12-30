@@ -22,7 +22,7 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
-    @PostMapping("/create/{eventId}")
+    @PostMapping("/create/{id}")
     public TicketResponseDTO createTicket(@PathVariable String id, @RequestBody TicketDTO ticketDTO) {
         return ticketService.createTicket(id, ticketDTO);
     }
@@ -49,6 +49,8 @@ public class TicketController {
         ticketService.cancelTicket(ticketId);
         return ResponseEntity.noContent().build(); // Retorna 204 No Content após a exclusão
     }
+
+
 
 
 

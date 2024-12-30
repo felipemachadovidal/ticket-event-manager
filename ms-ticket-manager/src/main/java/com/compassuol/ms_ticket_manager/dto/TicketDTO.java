@@ -14,6 +14,7 @@ public class TicketDTO {
     private String status;
     private Double brlAmount;
     private Double usdAmount;
+    private String id;
 
     public Double getBrlAmount() {
         return brlAmount;
