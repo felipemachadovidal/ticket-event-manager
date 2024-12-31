@@ -1,11 +1,11 @@
 package com.compassuol.ms_ticket_manager.model;
 
+import com.compassuol.ms_ticket_manager.dto.TicketDTO;
 import lombok.*;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Document(collection = "tickets")
@@ -103,5 +103,19 @@ public class Ticket {
 
     public void setUsdAmount(Double usdAmount) {
         this.usdAmount = usdAmount;
+    }
+    public Ticket(TicketDTO ticketDTO) {
+        this.ticketid = ticketDTO.getTicketId();
+        this.customerName = ticketDTO.getCustomerName();
+        this.cpf = ticketDTO.getCpf();
+        this.customerMail = ticketDTO.getCustomerMail();
+        this.id = ticketDTO.getId();
+        this.eventName = ticketDTO.getEventName();
+        this.brlAmount = ticketDTO.getBrlAmount();
+        this.usdAmount = ticketDTO.getUsdAmount();
+    }
+
+    public Ticket(){
+
     }
 }

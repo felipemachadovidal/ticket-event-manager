@@ -4,6 +4,7 @@ package com.compassuol.ms_ticket_manager.controller;
 import com.compassuol.ms_ticket_manager.dto.*;
 import com.compassuol.ms_ticket_manager.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +23,15 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
-    @PostMapping("/create/{id}")
-    public TicketResponseDTO createTicket(@PathVariable String id, @RequestBody TicketDTO ticketDTO) {
-        return ticketService.createTicket(id, ticketDTO);
+    @PostMapping("/create-ticket")
+    public ResponseEntity<?> createTicket(@RequestBody TicketDTO ticketDTO) {
+        try {
+            TicketResponseDTO ticketResponse = ticketService.createTicket(ticketDTO.getId(), ticketDTO);
+            return ResponseEntity.ok(ticketResponse);
+        } catch (Exception e) {
+            e.printStackTrace();  // Imprima a pilha de erro para depuração
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating ticket: " + e.getMessage());
+        }
     }
 
     @GetMapping("/get-ticket/{ticketId}")

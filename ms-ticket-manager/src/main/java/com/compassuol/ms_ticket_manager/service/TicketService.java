@@ -4,10 +4,14 @@ import com.compassuol.ms_ticket_manager.client.EventManagerClient;
 import com.compassuol.ms_ticket_manager.dto.EventResponseDTO;
 import com.compassuol.ms_ticket_manager.dto.TicketDTO;
 import com.compassuol.ms_ticket_manager.dto.TicketResponseDTO;
+import com.compassuol.ms_ticket_manager.execeptions.EventNotFoundException;
 import com.compassuol.ms_ticket_manager.model.Ticket;
 import com.compassuol.ms_ticket_manager.repository.TicketRepository;
+import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,25 +30,35 @@ public class TicketService {
     }
 
     public TicketResponseDTO createTicket(String id, TicketDTO ticketDTO) {
-        EventResponseDTO eventDetails = eventManagerClient.getEventDetails(ticketDTO.getId());
-        if (eventDetails == null) {
-            throw new IllegalArgumentException("Event not found with ID: " + ticketDTO.getId());
+        // Verifique se o ID do evento é válido
+        System.out.println("Creating ticket for event ID: " + ticketDTO.getId());
+        EventResponseDTO eventDetails;
+
+        try {
+            eventDetails = eventManagerClient.getEventDetails(ticketDTO.getId());
+        } catch (FeignException.NotFound e) {
+            throw new EventNotFoundException("Event not found with ID: " + ticketDTO.getId());
         }
 
+        if (eventDetails == null) {
+            throw new EventNotFoundException("Event not found with ID: " + ticketDTO.getId());
+        }
+
+        // Agora você pode continuar com a criação do ticket
         Ticket ticket = new Ticket();
         ticket.setCustomerName(ticketDTO.getCustomerName());
         ticket.setCpf(ticketDTO.getCpf());
         ticket.setCustomerMail(ticketDTO.getCustomerMail());
         ticket.setId(ticketDTO.getId());
-        ticket.setEventName(ticketDTO.getEventName());
+        ticket.setEventName(eventDetails.getEventName());
         ticket.setBrlAmount(ticketDTO.getBrlAmount());
         ticket.setUsdAmount(ticketDTO.getUsdAmount());
         ticket.setStatus("concluído");
 
         Ticket savedTicket = ticketRepository.save(ticket);
 
-        return new TicketResponseDTO(
-                savedTicket.getId().toString(),
+        TicketResponseDTO response = new TicketResponseDTO(
+                savedTicket.getId(),
                 savedTicket.getCustomerName(),
                 savedTicket.getCpf(),
                 savedTicket.getCustomerMail(),
@@ -53,6 +67,9 @@ public class TicketService {
                 savedTicket.getBrlAmount(),
                 savedTicket.getUsdAmount()
         );
+
+        System.out.println("Ticket created: " + response);
+        return response;
     }
 
 
