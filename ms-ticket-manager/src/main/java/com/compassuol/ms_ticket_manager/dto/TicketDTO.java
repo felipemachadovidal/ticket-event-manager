@@ -5,6 +5,7 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter @Setter
 public class TicketDTO {
 
     private String customerName;
@@ -14,6 +15,8 @@ public class TicketDTO {
     private String status;
     private Double brlAmount;
     private Double usdAmount;
+    private String id;
+    private String ticketId;
 
     public Double getBrlAmount() {
         return brlAmount;
@@ -69,5 +72,17 @@ public class TicketDTO {
 
     public void setUsdAmount(Double usdAmount) {
         this.usdAmount = usdAmount;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTicketId() {
+        return ticketId;
     }
 }
