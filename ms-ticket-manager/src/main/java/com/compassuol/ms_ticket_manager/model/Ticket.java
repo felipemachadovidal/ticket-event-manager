@@ -105,7 +105,6 @@ public class Ticket {
         this.usdAmount = usdAmount;
     }
     public Ticket(TicketDTO ticketDTO) {
-        this.ticketid = ticketDTO.getTicketId();
         this.customerName = ticketDTO.getCustomerName();
         this.cpf = ticketDTO.getCpf();
         this.customerMail = ticketDTO.getCustomerMail();
