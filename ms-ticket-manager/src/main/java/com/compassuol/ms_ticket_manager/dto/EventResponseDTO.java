@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class EventResponseDTO {
 
     private String id;
@@ -18,6 +19,7 @@ public class EventResponseDTO {
     private String localidade;
     private String uf;
     private boolean deleted;
+    private String ticketId;
 
     public String getBairro() {
         return bairro;
@@ -89,5 +91,13 @@ public class EventResponseDTO {
 
     public void setLogradouro(String logradouro) {
         this.logradouro = logradouro;
+    }
+
+    public String getTicketId() {
+        return ticketId;
+    }
+
+    public void setTicketId(String ticketId) {
+        this.ticketId = ticketId;
     }
 }

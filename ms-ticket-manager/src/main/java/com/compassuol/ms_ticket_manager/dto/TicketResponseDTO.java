@@ -1,6 +1,9 @@
 package com.compassuol.ms_ticket_manager.dto;
 
 import lombok.*;
+import org.bson.types.ObjectId;
+
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -16,6 +19,7 @@ public class TicketResponseDTO {
     private Double brlAmount;
     private Double usdAmount;
     private EventResponseDTO event;
+    private EventDetails eventDetails;
 
     public TicketResponseDTO(String ticketid, String customerName, String cpf, String customerMail, String eventName, String status, Double brlAmount, Double usdAmount) {
     }
@@ -25,6 +29,9 @@ public class TicketResponseDTO {
     }
 
     public TicketResponseDTO(String string, String customerName, String cpf, String customerMail, String eventName, String status, Double brlAmount, Double usdAmount, EventDetails eventDetails) {
+    }
+
+    public TicketResponseDTO(ObjectId ticketid, String customerName, String cpf, String customerMail, String eventName, String status, Double brlAmount, Double usdAmount) {
     }
 
     public Double getBrlAmount() {
@@ -103,7 +110,82 @@ public class TicketResponseDTO {
         return event;
     }
 
+    public EventDetails getEventDetails() {
+        return eventDetails;
+    }
+
+    public void setEventDetails(EventDetails eventDetails) {
+        this.eventDetails = eventDetails;
+    }
+
     public void setEvent(EventResponseDTO event) {
         this.event = event;
+
+    }
+
+    public static class EventDetails {
+        private String id;
+        private String eventName;
+        private LocalDateTime eventDateTime;
+        private String logradouro;
+        private String bairro;
+        private String cidade;
+        private String uf;
+
+        public String getBairro() {
+            return bairro;
+        }
+
+        public void setBairro(String bairro) {
+            this.bairro = bairro;
+        }
+
+        public String getCidade() {
+            return cidade;
+        }
+
+        public void setCidade(String cidade) {
+            this.cidade = cidade;
+        }
+
+        public LocalDateTime getEventDateTime() {
+            return eventDateTime;
+        }
+
+        public void setEventDateTime(LocalDateTime eventDateTime) {
+            this.eventDateTime = eventDateTime;
+        }
+
+        public String getEventName() {
+            return eventName;
+        }
+
+        public void setEventName(String eventName) {
+            this.eventName = eventName;
+        }
+
+        public String getLogradouro() {
+            return logradouro;
+        }
+
+        public void setLogradouro(String logradouro) {
+            this.logradouro = logradouro;
+        }
+
+        public String getUf() {
+            return uf;
+        }
+
+        public void setUf(String uf) {
+            this.uf = uf;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
     }
 }

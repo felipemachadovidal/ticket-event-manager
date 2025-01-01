@@ -2,8 +2,10 @@ package com.compassuol.ms_ticket_manager.model;
 
 import com.compassuol.ms_ticket_manager.dto.TicketDTO;
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 @AllArgsConstructor
@@ -12,7 +14,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Ticket {
 
     @Id
-    private String ticketid;
+    @Field("_id")
+    private ObjectId ticketid;
 
     private String customerName;
 
@@ -89,11 +92,11 @@ public class Ticket {
         this.status = status;
     }
 
-    public String getTicketid() {
+    public ObjectId getTicketid() {
         return ticketid;
     }
 
-    public void setTicketid(String ticketid) {
+    public void setTicketid(ObjectId ticketid) {
         this.ticketid = ticketid;
     }
 
@@ -105,7 +108,6 @@ public class Ticket {
         this.usdAmount = usdAmount;
     }
     public Ticket(TicketDTO ticketDTO) {
-        this.ticketid = ticketDTO.getTicketId();
         this.customerName = ticketDTO.getCustomerName();
         this.cpf = ticketDTO.getCpf();
         this.customerMail = ticketDTO.getCustomerMail();
