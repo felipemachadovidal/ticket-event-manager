@@ -85,4 +85,8 @@ public class TicketDTO {
     public String getTicketId() {
         return ticketId;
     }
+
+    public void setTicketId(String ticketId) {
+        this.ticketId = ticketId;
+    }
 }

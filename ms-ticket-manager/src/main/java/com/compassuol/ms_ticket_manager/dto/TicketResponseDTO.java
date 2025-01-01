@@ -1,6 +1,7 @@
 package com.compassuol.ms_ticket_manager.dto;
 
 import lombok.*;
+import org.bson.types.ObjectId;
 
 import java.time.LocalDateTime;
 
@@ -28,6 +29,9 @@ public class TicketResponseDTO {
     }
 
     public TicketResponseDTO(String string, String customerName, String cpf, String customerMail, String eventName, String status, Double brlAmount, Double usdAmount, EventDetails eventDetails) {
+    }
+
+    public TicketResponseDTO(ObjectId ticketid, String customerName, String cpf, String customerMail, String eventName, String status, Double brlAmount, Double usdAmount) {
     }
 
     public Double getBrlAmount() {
@@ -117,7 +121,6 @@ public class TicketResponseDTO {
     public void setEvent(EventResponseDTO event) {
         this.event = event;
 
-
     }
 
     public static class EventDetails {
@@ -161,14 +164,6 @@ public class TicketResponseDTO {
             this.eventName = eventName;
         }
 
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
         public String getLogradouro() {
             return logradouro;
         }
@@ -185,6 +180,12 @@ public class TicketResponseDTO {
             this.uf = uf;
         }
 
+        public String getId() {
+            return id;
+        }
 
+        public void setId(String id) {
+            this.id = id;
+        }
     }
 }

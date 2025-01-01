@@ -2,7 +2,9 @@ package com.compassuol.ms_ticket_manager.controller;
 
 
 import com.compassuol.ms_ticket_manager.dto.*;
+import com.compassuol.ms_ticket_manager.model.Ticket;
 import com.compassuol.ms_ticket_manager.service.TicketService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,14 +31,15 @@ public class TicketController {
             TicketResponseDTO ticketResponse = ticketService.createTicket(ticketDTO.getId(), ticketDTO);
             return ResponseEntity.ok(ticketResponse);
         } catch (Exception e) {
-            e.printStackTrace();  // Imprima a pilha de erro para depuração
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating ticket: " + e.getMessage());
         }
     }
 
     @GetMapping("/get-ticket/{ticketId}")
-    public TicketResponseDTO getTicketById(@PathVariable String ticketId) {
-        return ticketService.getTicketById(ticketId);
+    public ResponseEntity<Ticket> getTicketById(@PathVariable ObjectId ticketId) {
+        Ticket ticket = ticketService.getTicketById(ticketId);
+        return ResponseEntity.ok(ticket);
     }
 
     @GetMapping("/list-tickets-by-cpf/{cpf}")
