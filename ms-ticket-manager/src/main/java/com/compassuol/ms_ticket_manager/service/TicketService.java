@@ -33,15 +33,13 @@ public class TicketService {
     public TicketResponseDTO createTicket(String id, TicketDTO ticketDTO) {
         System.out.println("Creating ticket for event ID: " + ticketDTO.getId());
 
-        // Verificar detalhes do evento
         EventResponseDTO eventDetails = eventManagerClient.getEventDetails(ticketDTO.getId());
         if (eventDetails == null) {
             throw new IllegalArgumentException("Event not found with ID: " + ticketDTO.getId());
         }
 
-        // Criar e preencher a entidade Ticket
         Ticket ticket = new Ticket();
-        ticket.setTicketid(null); // Deixe nulo para que o MongoDB gere o _id
+        ticket.setTicketid(null);
         ticket.setCustomerName(ticketDTO.getCustomerName());
         ticket.setCpf(ticketDTO.getCpf());
         ticket.setCustomerMail(ticketDTO.getCustomerMail());
@@ -50,12 +48,10 @@ public class TicketService {
         ticket.setBrlAmount(ticketDTO.getBrlAmount());
         ticket.setUsdAmount(ticketDTO.getUsdAmount());
 
-        // Salvar o ticket no banco
         Ticket savedTicket = ticketRepository.save(ticket);
 
-        // Construir o objeto de resposta
         TicketResponseDTO response = new TicketResponseDTO();
-        response.setTicketid(String.valueOf(savedTicket.getTicketid()));
+        response.setTicketid((savedTicket.getTicketid()));
         response.setCustomerName(savedTicket.getCustomerName());
         response.setCpf(savedTicket.getCpf());
         response.setCustomerMail(savedTicket.getCustomerMail());
@@ -64,7 +60,6 @@ public class TicketService {
         response.setBrlAmount(savedTicket.getBrlAmount());
         response.setUsdAmount(savedTicket.getUsdAmount());
 
-        // Configurar os detalhes do evento no DTO
         TicketResponseDTO.EventDetails event = new TicketResponseDTO.EventDetails();
         event.setId(eventDetails.getId());
         event.setEventName(eventDetails.getEventName());
@@ -73,15 +68,15 @@ public class TicketService {
         event.setBairro(eventDetails.getBairro());
         event.setCidade(eventDetails.getLocalidade());
         event.setUf(eventDetails.getUf());
-        response.setEventDetails(event); // Definir os detalhes do evento no DTO
+        response.setEventDetails(event);
 
         System.out.println("Ticket created: " + response);
         return response;
     }
 
 
-    public TicketResponseDTO updateTicket(String ticketId, TicketDTO ticketDTO) {
-        Ticket ticket = ticketRepository.findById(ticketId)
+    public TicketResponseDTO updateTicket(ObjectId  ticketId, TicketDTO ticketDTO) {
+        Ticket ticket = ticketRepository.findById(String.valueOf(ticketId))
                 .orElseThrow(() -> new RuntimeException("Ticket not found with ID: " + ticketId));
 
         ticket.setCustomerName(ticketDTO.getCustomerName());
@@ -95,7 +90,7 @@ public class TicketService {
         Ticket updatedTicket = ticketRepository.save(ticket);
 
         TicketResponseDTO response = new TicketResponseDTO();
-        response.setTicketid(String.valueOf(updatedTicket.getTicketid()));
+        response.setTicketid((updatedTicket.getTicketid()));
         response.setCustomerName(updatedTicket.getCustomerName());
         response.setCpf(updatedTicket.getCpf());
         response.setCustomerMail(updatedTicket.getCustomerMail());
@@ -107,8 +102,8 @@ public class TicketService {
         return response;
     }
 
-    public void cancelTicket(String ticketId) {
-        Ticket ticket = ticketRepository.findById(ticketId)
+    public void cancelTicket(ObjectId  ticketId) {
+        Ticket ticket = ticketRepository.findById(String.valueOf(ticketId))
                 .orElseThrow(() -> new RuntimeException("Ticket not found with ID: " + ticketId));
 
         ticket.setStatus("CANCELLED");
@@ -116,28 +111,28 @@ public class TicketService {
     }
 
 
-    public List<TicketResponseDTO> listTicketsByCpf(String cpf) {
-        // Buscar os tickets no banco de dados
+    public List<Ticket> listTicketsByCpf(String cpf) {
+        // Exibe o CPF que está sendo consultado
+        System.out.println("Buscando tickets para o CPF: " + cpf);
+
+        // Consulta os tickets no banco de dados usando o repositório
         List<Ticket> tickets = ticketRepository.findByCpf(cpf);
 
-        // Transformar em DTOs
-        return tickets.stream()
-                .map(ticket -> new TicketResponseDTO(
-                        ticket.getTicketid(),
-                        ticket.getCustomerName(),
-                        ticket.getCpf(),
-                        ticket.getCustomerMail(),
-                        ticket.getEventName(),
-                        ticket.getStatus(),
-                        ticket.getBrlAmount(),
-                        ticket.getUsdAmount()
-                ))
-                .collect(Collectors.toList());
+        // Verifica se encontrou tickets e imprime no log
+        if (tickets.isEmpty()) {
+            System.out.println("Nenhum ticket encontrado para o CPF: " + cpf);
+        } else {
+            System.out.println("Tickets encontrados: ");
+            tickets.forEach(ticket -> System.out.println(ticket)); // Exibe os tickets no log
+        }
+
+        // Retorna a lista de tickets
+        return tickets;
     }
+
 
     public Ticket getTicketById(ObjectId  ticketId) {
         try {
-            // Usa o método personalizado para buscar no MongoDB
             return ticketRepository.findByObjectId(ticketId)
                     .orElseThrow(() -> new RuntimeException("Ticket not found for ID: " + ticketId));
         } catch (IllegalArgumentException e) {

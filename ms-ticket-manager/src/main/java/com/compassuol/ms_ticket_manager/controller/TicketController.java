@@ -43,19 +43,19 @@ public class TicketController {
     }
 
     @GetMapping("/list-tickets-by-cpf/{cpf}")
-    public List<TicketResponseDTO> listTicketsByCpf(@PathVariable String cpf) {
+    public List<Ticket> listTicketsByCpf(@PathVariable String cpf) {
         return ticketService.listTicketsByCpf(cpf);
     }
 
     @PutMapping("/update-ticket/{id}")
-    public ResponseEntity<TicketResponseDTO> updateTicket(@PathVariable("id") String ticketId,
+    public ResponseEntity<TicketResponseDTO> updateTicket(@PathVariable("id") ObjectId ticketId,
                                                           @RequestBody TicketDTO ticketDTO) {
         TicketResponseDTO updatedTicket = ticketService.updateTicket(ticketId, ticketDTO);
         return ResponseEntity.ok(updatedTicket);
     }
 
     @DeleteMapping("/cancel-ticket/{id}")
-    public ResponseEntity<Void> cancelTicket(@PathVariable("id") String ticketId) {
+    public ResponseEntity<Void> cancelTicket(@PathVariable("id") ObjectId ticketId) {
         ticketService.cancelTicket(ticketId);
         return ResponseEntity.noContent().build(); // Retorna 204 No Content após a exclusão
     }
