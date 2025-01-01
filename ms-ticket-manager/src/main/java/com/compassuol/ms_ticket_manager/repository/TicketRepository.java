@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface TicketRepository extends MongoRepository<Ticket, String> {
+
     List<Ticket> findByCpf(String cpf);
 
 

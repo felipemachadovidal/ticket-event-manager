@@ -1,5 +1,7 @@
 package com.compassuol.ms_ticket_manager.dto;
 
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.bson.types.ObjectId;
 
@@ -9,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter @Setter
 public class TicketResponseDTO {
-    private String ticketid;
+    private ObjectId ticketid;
     private String customerName;
     private String cpf;
     private String customerMail;
@@ -21,14 +23,8 @@ public class TicketResponseDTO {
     private EventResponseDTO event;
     private EventDetails eventDetails;
 
-    public TicketResponseDTO(String ticketid, String customerName, String cpf, String customerMail, String eventName, String status, Double brlAmount, Double usdAmount) {
-    }
-
     public TicketResponseDTO() {
-
-    }
-
-    public TicketResponseDTO(String string, String customerName, String cpf, String customerMail, String eventName, String status, Double brlAmount, Double usdAmount, EventDetails eventDetails) {
+        
     }
 
     public TicketResponseDTO(ObjectId ticketid, String customerName, String cpf, String customerMail, String eventName, String status, Double brlAmount, Double usdAmount) {
@@ -66,6 +62,22 @@ public class TicketResponseDTO {
         this.customerName = customerName;
     }
 
+    public EventResponseDTO getEvent() {
+        return event;
+    }
+
+    public void setEvent(EventResponseDTO event) {
+        this.event = event;
+    }
+
+    public EventDetails getEventDetails() {
+        return eventDetails;
+    }
+
+    public void setEventDetails(EventDetails eventDetails) {
+        this.eventDetails = eventDetails;
+    }
+
     public String getEventName() {
         return eventName;
     }
@@ -90,11 +102,11 @@ public class TicketResponseDTO {
         this.status = status;
     }
 
-    public String getTicketid() {
+    public ObjectId getTicketid() {
         return ticketid;
     }
 
-    public void setTicketid(String ticketid) {
+    public void setTicketid(ObjectId ticketid) {
         this.ticketid = ticketid;
     }
 
@@ -106,22 +118,6 @@ public class TicketResponseDTO {
         this.usdAmount = usdAmount;
     }
 
-    public EventResponseDTO getEvent() {
-        return event;
-    }
-
-    public EventDetails getEventDetails() {
-        return eventDetails;
-    }
-
-    public void setEventDetails(EventDetails eventDetails) {
-        this.eventDetails = eventDetails;
-    }
-
-    public void setEvent(EventResponseDTO event) {
-        this.event = event;
-
-    }
 
     public static class EventDetails {
         private String id;
