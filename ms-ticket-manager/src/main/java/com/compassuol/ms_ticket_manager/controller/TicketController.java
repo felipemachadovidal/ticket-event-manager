@@ -57,7 +57,7 @@ public class TicketController {
     @DeleteMapping("/cancel-ticket/{id}")
     public ResponseEntity<Void> cancelTicket(@PathVariable("id") ObjectId ticketId) {
         ticketService.cancelTicket(ticketId);
-        return ResponseEntity.noContent().build(); // Retorna 204 No Content após a exclusão
+        return ResponseEntity.noContent().build();
     }
 
 

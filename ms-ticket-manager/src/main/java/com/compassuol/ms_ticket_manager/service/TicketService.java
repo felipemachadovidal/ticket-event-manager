@@ -1,33 +1,33 @@
 package com.compassuol.ms_ticket_manager.service;
 
 import com.compassuol.ms_ticket_manager.client.EventManagerClient;
+import com.compassuol.ms_ticket_manager.config.RabbitMQConfig;
 import com.compassuol.ms_ticket_manager.dto.EventResponseDTO;
 import com.compassuol.ms_ticket_manager.dto.TicketDTO;
 import com.compassuol.ms_ticket_manager.dto.TicketResponseDTO;
-import com.compassuol.ms_ticket_manager.execeptions.EventNotFoundException;
 import com.compassuol.ms_ticket_manager.model.Ticket;
 import com.compassuol.ms_ticket_manager.repository.TicketRepository;
-import feign.FeignException;
 import org.bson.types.ObjectId;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 public class TicketService {
 
     private final TicketRepository ticketRepository;
     private final EventManagerClient eventManagerClient;
+    private final RabbitTemplate rabbitTemplate;
 
     @Autowired
-    public TicketService(TicketRepository ticketRepository, EventManagerClient eventManagerClient) {
+    public TicketService(TicketRepository ticketRepository, EventManagerClient eventManagerClient, RabbitTemplate rabbitTemplate) {
         this.ticketRepository = ticketRepository;
         this.eventManagerClient = eventManagerClient;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     public TicketResponseDTO createTicket(String id, TicketDTO ticketDTO) {
@@ -59,6 +59,13 @@ public class TicketService {
         response.setStatus(savedTicket.getStatus());
         response.setBrlAmount(savedTicket.getBrlAmount());
         response.setUsdAmount(savedTicket.getUsdAmount());
+
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EXCHANGE_NAME,
+                RabbitMQConfig.ROUTING_KEY,
+                "Ticket created with ID: " + ticket.getId()
+        );
+        System.out.println("Ticket creation message sent to queue.");
 
         TicketResponseDTO.EventDetails event = new TicketResponseDTO.EventDetails();
         event.setId(eventDetails.getId());
@@ -112,13 +119,11 @@ public class TicketService {
 
 
     public List<Ticket> listTicketsByCpf(String cpf) {
-        // Exibe o CPF que está sendo consultado
+
         System.out.println("Buscando tickets para o CPF: " + cpf);
 
-        // Consulta os tickets no banco de dados usando o repositório
         List<Ticket> tickets = ticketRepository.findByCpf(cpf);
 
-        // Verifica se encontrou tickets e imprime no log
         if (tickets.isEmpty()) {
             System.out.println("Nenhum ticket encontrado para o CPF: " + cpf);
         } else {
@@ -126,7 +131,6 @@ public class TicketService {
             tickets.forEach(ticket -> System.out.println(ticket)); // Exibe os tickets no log
         }
 
-        // Retorna a lista de tickets
         return tickets;
     }
 
