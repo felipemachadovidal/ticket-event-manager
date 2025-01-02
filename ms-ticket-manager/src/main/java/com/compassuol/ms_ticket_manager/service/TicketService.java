@@ -1,12 +1,14 @@
 package com.compassuol.ms_ticket_manager.service;
 
 import com.compassuol.ms_ticket_manager.client.EventManagerClient;
+import com.compassuol.ms_ticket_manager.config.RabbitMQConfig;
 import com.compassuol.ms_ticket_manager.dto.EventResponseDTO;
 import com.compassuol.ms_ticket_manager.dto.TicketDTO;
 import com.compassuol.ms_ticket_manager.dto.TicketResponseDTO;
 import com.compassuol.ms_ticket_manager.model.Ticket;
 import com.compassuol.ms_ticket_manager.repository.TicketRepository;
 import org.bson.types.ObjectId;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +21,13 @@ public class TicketService {
 
     private final TicketRepository ticketRepository;
     private final EventManagerClient eventManagerClient;
+    private final RabbitTemplate rabbitTemplate;
 
     @Autowired
-    public TicketService(TicketRepository ticketRepository, EventManagerClient eventManagerClient) {
+    public TicketService(TicketRepository ticketRepository, EventManagerClient eventManagerClient, RabbitTemplate rabbitTemplate) {
         this.ticketRepository = ticketRepository;
         this.eventManagerClient = eventManagerClient;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     public TicketResponseDTO createTicket(String id, TicketDTO ticketDTO) {
@@ -55,6 +59,13 @@ public class TicketService {
         response.setStatus(savedTicket.getStatus());
         response.setBrlAmount(savedTicket.getBrlAmount());
         response.setUsdAmount(savedTicket.getUsdAmount());
+
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EXCHANGE_NAME,
+                RabbitMQConfig.ROUTING_KEY,
+                "Ticket created with ID: " + ticket.getId()
+        );
+        System.out.println("Ticket creation message sent to queue.");
 
         TicketResponseDTO.EventDetails event = new TicketResponseDTO.EventDetails();
         event.setId(eventDetails.getId());
