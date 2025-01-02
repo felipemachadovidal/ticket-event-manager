@@ -60,12 +60,16 @@ public class TicketService {
         response.setBrlAmount(savedTicket.getBrlAmount());
         response.setUsdAmount(savedTicket.getUsdAmount());
 
-        rabbitTemplate.convertAndSend(
-                RabbitMQConfig.EXCHANGE_NAME,
-                RabbitMQConfig.ROUTING_KEY,
-                "Ticket created with ID: " + ticket.getId()
+        String message = String.format(
+                "Ticket created successfully!\nID: %s\nEvent: %s\nCustomer: %s\nEmail: %s",
+                savedTicket.getTicketid(),
+                savedTicket.getEventName(),
+                savedTicket.getCustomerName(),
+                savedTicket.getCustomerMail()
         );
-        System.out.println("Ticket creation message sent to queue.");
+        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, RabbitMQConfig.ROUTING_KEY, message);
+
+        System.out.println("Message sent to RabbitMQ: " + message);
 
         TicketResponseDTO.EventDetails event = new TicketResponseDTO.EventDetails();
         event.setId(eventDetails.getId());
