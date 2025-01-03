@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class EventResponseDTO {
 
@@ -20,6 +19,9 @@ public class EventResponseDTO {
     private String uf;
     private boolean deleted;
     private String ticketId;
+
+    public EventResponseDTO(String eventName, String date, String address, String city, String state) {
+    }
 
     public String getBairro() {
         return bairro;
@@ -99,5 +101,9 @@ public class EventResponseDTO {
 
     public void setTicketId(String ticketId) {
         this.ticketId = ticketId;
+    }
+
+    public EventResponseDTO(){
+
     }
 }
