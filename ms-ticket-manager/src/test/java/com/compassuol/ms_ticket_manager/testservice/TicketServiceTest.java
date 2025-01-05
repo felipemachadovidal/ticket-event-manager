@@ -16,8 +16,13 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 
 import java.time.LocalDateTime;
+import java.util.Optional;
+
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.client.ExpectedCount.times;
 
 
 class TicketServiceTest {
@@ -33,7 +38,7 @@ class TicketServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        // Criação manual do EventManagerClient no lugar de usar mocks
+
         EventManagerClient eventManagerClient = new EventManagerClient() {
             @Override
             public EventResponseDTO getEventDetails(String id) {
@@ -49,17 +54,15 @@ class TicketServiceTest {
                     eventResponseDTO.setUf("State");
                     return eventResponseDTO;
                 }
-                return null; // Se o ID não for "123", retorna null
+                return null;
             }
         };
 
-        // Inicializa o TicketService com as dependências manualmente criadas
         ticketService = new TicketService(ticketRepository, eventManagerClient, rabbitTemplate);
     }
 
     @Test
     void testCreateTicket() {
-        // Dados de entrada para o teste
         TicketDTO ticketDTO = new TicketDTO();
         ticketDTO.setId("123");
         ticketDTO.setCustomerName("John Doe");
@@ -68,9 +71,8 @@ class TicketServiceTest {
         ticketDTO.setBrlAmount(100.0);
         ticketDTO.setUsdAmount(20.0);
 
-        // Criando o Ticket que será salvo
         Ticket savedTicket = new Ticket();
-        savedTicket.setTicketid(new ObjectId()); // Usando ObjectId
+        savedTicket.setTicketid(new ObjectId());
         savedTicket.setCustomerName(ticketDTO.getCustomerName());
         savedTicket.setCpf(ticketDTO.getCpf());
         savedTicket.setCustomerMail(ticketDTO.getCustomerMail());
@@ -79,26 +81,46 @@ class TicketServiceTest {
         savedTicket.setBrlAmount(ticketDTO.getBrlAmount());
         savedTicket.setUsdAmount(ticketDTO.getUsdAmount());
 
-        // Simulando o comportamento do ticketRepository para salvar o ticket
-        Mockito.when(ticketRepository.save(Mockito.any(Ticket.class))).thenReturn(savedTicket);
+        when(ticketRepository.save(Mockito.any(Ticket.class))).thenReturn(savedTicket);
 
-        // Simulação para RabbitTemplate
+
         Mockito.doNothing().when(rabbitTemplate).convertAndSend(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
 
-        // Chamada ao método do TicketService
+
         TicketResponseDTO response = ticketService.createTicket("123", ticketDTO);
 
-        // Verificações
+
         assertNotNull(response);
-        assertEquals(savedTicket.getTicketid().toString(), response.getTicketid().toString()); // Comparando ObjectId convertido para String
+        assertEquals(savedTicket.getTicketid().toString(), response.getTicketid().toString());
         assertEquals("John Doe", response.getCustomerName());
         assertEquals("Concert", response.getEventName());
         assertEquals("concluído", response.getStatus());
 
-        // Verifique se o método de enviar para o RabbitMQ foi chamado
-        Mockito.verify(rabbitTemplate, Mockito.times(1)).convertAndSend(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
 
-        // Verifique se o método de salvar ticket foi chamado
-        Mockito.verify(ticketRepository, Mockito.times(1)).save(Mockito.any(Ticket.class));
+        verify(rabbitTemplate, Mockito.times(1)).convertAndSend(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
+
+
+        verify(ticketRepository, Mockito.times(1)).save(Mockito.any(Ticket.class));
     }
+    @Test
+    void testGetTicketById() {
+        ObjectId ticketId = new ObjectId("6452d37fb1742e1a60d5f9d1");
+
+        Ticket ticket = new Ticket();
+        ticket.setTicketid(ticketId);
+        ticket.setCustomerName("John Doe");
+        ticket.setEventName("Concert");
+
+        when(ticketRepository.findByObjectId(ticketId)).thenReturn(Optional.of(ticket));
+
+        Ticket response = ticketService.getTicketById(ticketId);
+
+        assertNotNull(response);
+        assertEquals(ticket.getTicketid(), response.getTicketid());
+        assertEquals("John Doe", response.getCustomerName());
+        assertEquals("Concert", response.getEventName());
+
+        verify(ticketRepository).findByObjectId(ticketId);
+    }
+
 }
