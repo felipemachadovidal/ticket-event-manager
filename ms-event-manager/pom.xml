@@ -9,9 +9,9 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.compassuol</groupId>
-	<artifactId>ms-ticket-manager</artifactId>
+	<artifactId>ms-event-manager</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ms-ticket-manager</name>
+	<name>ms-event-manager</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
