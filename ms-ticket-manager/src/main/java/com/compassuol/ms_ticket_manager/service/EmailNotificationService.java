@@ -1,5 +1,4 @@
 package com.compassuol.ms_ticket_manager.service;
-
 import com.compassuol.ms_ticket_manager.config.RabbitMQConfig;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ public class EmailNotificationService {
         mailMessage.setSubject("Ticket Confirmation");
         mailMessage.setText(message);
 
-        // Enviar o e-mail
         try {
             mailSender.send(mailMessage);
             System.out.println("Email sent successfully.");

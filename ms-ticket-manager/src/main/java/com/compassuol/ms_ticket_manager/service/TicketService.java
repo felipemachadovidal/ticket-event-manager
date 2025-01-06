@@ -59,7 +59,6 @@ public class TicketService {
         response.setStatus(savedTicket.getStatus());
         response.setBrlAmount(savedTicket.getBrlAmount());
         response.setUsdAmount(savedTicket.getUsdAmount());
-
         String message = String.format(
                 "Ticket created successfully!\nID: %s\nEvent: %s\nCustomer: %s\nEmail: %s",
                 savedTicket.getTicketid(),
@@ -84,7 +83,6 @@ public class TicketService {
         System.out.println("Ticket created: " + response);
         return response;
     }
-
 
     public TicketResponseDTO updateTicket(ObjectId  ticketId, TicketDTO ticketDTO) {
         Ticket ticket = ticketRepository.findById(String.valueOf(ticketId))
@@ -112,7 +110,6 @@ public class TicketService {
 
         return response;
     }
-
     public void cancelTicket(ObjectId  ticketId) {
         Ticket ticket = ticketRepository.findById(String.valueOf(ticketId))
                 .orElseThrow(() -> new RuntimeException("Ticket not found with ID: " + ticketId));
@@ -120,7 +117,6 @@ public class TicketService {
         ticket.setStatus("CANCELLED");
         ticketRepository.save(ticket);
     }
-
 
     public List<Ticket> listTicketsByCpf(String cpf) {
 
@@ -137,8 +133,6 @@ public class TicketService {
 
         return tickets;
     }
-
-
     public Ticket getTicketById(ObjectId  ticketId) {
         try {
             return ticketRepository.findByObjectId(ticketId)
