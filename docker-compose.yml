@@ -9,9 +9,11 @@ services:
       - "8082:8082"
     environment:
       SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATA_MONGODB_URI: mongodb+srv://lipem61:GRa3vbW0jPh3UNAL
+@desafiocompass.rip2j.mongodb.net/?retryWrites=true&w=majority&appName=desafiocompass
     depends_on:
       - ms-ticket-manager
-
+  
   ms-ticket-manager:
     build:
       context: ./ms-ticket-manager
@@ -20,17 +22,17 @@ services:
       - "8081:8081"
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/event_ticket_db  
+      SPRING_DATA_MONGODB_URI: mongodb+srv://lipem61:GRa3vbW0jPh3UNAL
+@desafiocompass.rip2j.mongodb.net/?retryWrites=true&w=majority&appName=desafiocompass
     depends_on:
       - mongo
 
   mongo:
     image: mongo:latest
     ports:
-      - "27017:27017"  
+      - "27017:27017"
     volumes:
-      - mongo-data:/data/db  
+      - mongo-data:/data/db
 
 volumes:
   mongo-data:
-
